@@ -6,8 +6,8 @@ controllers:
     type: attribute
 
 # Route personnalisée pour la page de connexion
-app_login:
-    path: /login
+app_pages:
+    path: /
     controller: App\Controller\AuthController::login
 
 # Route personnalisée pour la page d'inscription

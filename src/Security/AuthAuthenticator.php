@@ -18,9 +18,9 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class AuthAuthenticator extends AbstractLoginFormAuthenticator
 {
-    use TargetPathTrait;
+    use TargetPathTrait; 
 
-    public const LOGIN_ROUTE = 'app_login';
+    public const LOGIN_ROUTE = 'app_pages';
 
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
@@ -49,7 +49,7 @@ class AuthAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // Redirection après connexion réussie (modifie 'app_home' si nécessaire)
-        return new RedirectResponse($this->urlGenerator->generate('app_pages'));
+        return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }
 
     protected function getLoginUrl(Request $request): string
