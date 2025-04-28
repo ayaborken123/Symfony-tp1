@@ -1,12 +1,57 @@
 {% extends 'base.html.twig' %}
-    {% block body %}
-        <h1><center>Hello From Tunisia</center></h1>
-        <h4> it's currently{{ 'now'|date('h:i A')}}</h4>
-        
-        <div class="text-center">
-            <img src="https://www.shutterstock.com/shutterstock/videos/1108853813/thumb/1.jpg?ip=x480" 
-                 alt="Description de l'image" 
-                 class="img-fluid" 
-                 style="max-width: 800px; width: 100%; height: auto;">
-        </div>        <a href="{{ path('about') }}" class="btn btn-primary">About us</a>
-    {% endblock %} 
+
+{% block body %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Notre Catalogue de Produits</h1>
+        <a href="{{ path('app_cart') }}" class="btn btn-outline-primary position-relative">
+            <i class="fas fa-shopping-cart"></i> Panier
+            {% if cartCount > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ cartCount }}
+            </span>
+            {% endif %}
+        </a>
+    </div>
+    
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="rating">
+                            {% for i in 1..5 %}
+                                <span class="fa fa-star {% if i <= product.rating %}checked{% endif %}"></span>
+                            {% endfor %}
+                        </div>
+                        <span class="price font-weight-bold">{{ product.price|number_format(2) }} TND</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-primary btn-block">
+                        Ajouter au panier
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .checked {
+        color: orange;
+    }
+    .card {
+        transition: transform 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}

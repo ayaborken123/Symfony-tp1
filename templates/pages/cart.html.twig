@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Votre Panier{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Votre Panier</h1>
+
+    {% if cartItems is empty %}
+        <div class="alert alert-info">
+            Votre panier est vide
+        </div>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix unitaire</th>
+                    <th>Quantité</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cartItems %}
+                    <tr>
+                        <td>
+                            <img src="{{ item.product.image }}" width="50" class="me-3">
+                            {{ item.product.name }}
+                        </td>
+                        <td>{{ item.product.price|number_format(2) }} TND</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.total|number_format(2) }} TND</td>
+                        <td>
+                            <a href="{{ path('app_cart_remove', {'id': item.product.id}) }}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="3">Total</th>
+                    <th>{{ total|number_format(2) }} TND</th>
+                    <th>
+                        <a href="{{ path('app_cart_clear') }}" class="btn btn-sm btn-warning" onclick="return confirm('Vider tout le panier ?')">
+                            <i class="fas fa-trash"></i> Vider
+                        </a>
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{{ path('app_home') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Continuer mes achats
+            </a>
+            <a href="{{ path('app_checkout') }}" class="btn btn-success">
+                <i class="fas fa-check"></i> Valider la commande
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
