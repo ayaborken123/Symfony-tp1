@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion{% endblock %}
+{% block title %}Connexion - PharmaCare{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
-    <div class="card shadow-lg p-4" style="width: 100%; max-width: 400px;">
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
         <div class="card-body">
-            <h2 class="card-title text-center mb-4">Connexion</h2>
+            <h2 class="text-center text-primary fw-bold">Connexion</h2>
 
             {% if error %}
                 <div class="alert alert-danger text-center">Email ou mot de passe invalide.</div>
@@ -14,11 +14,11 @@
 
             <form method="post">
                 <div class="mb-3">
-                    <label for="email" class="form-label">Adresse email</label>
+                    <label for="email" class="form-label fw-medium">Adresse email</label>
                     <input type="email" id="email" name="email" class="form-control" value="{{ last_username }}" required autofocus>
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label">Mot de passe</label>
+                    <label for="password" class="form-label fw-medium">Mot de passe</label>
                     <input type="password" id="password" name="password" class="form-control" required>
                 </div>
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
@@ -28,18 +28,10 @@
 
             <div class="text-center mt-3">
                 <small>Pas encore de compte ?
-                    <a href="{{ path('app_register') }}">Créer un compte</a>
+                    <a href="{{ path('app_register') }}" class="text-primary fw-bold">Créer un compte</a>
                 </small>
             </div>
         </div>
     </div>
 </div>
-{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <div class="text-center mt-4">
-        <form action="{{ path('app_logout') }}" method="post">
-            <button type="submit" class="btn btn-outline-danger">Se déconnecter</button>
-        </form>
-    </div>
-{% endif %}
-
 {% endblock %}

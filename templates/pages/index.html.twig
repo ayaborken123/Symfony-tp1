@@ -1,57 +1,521 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Accueil{% endblock %}
+
 {% block body %}
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Notre Catalogue de Produits</h1>
-        <a href="{{ path('app_cart') }}" class="btn btn-outline-primary position-relative">
-            <i class="fas fa-shopping-cart"></i> Panier
-            {% if cartCount > 0 %}
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{ cartCount }}
-            </span>
-            {% endif %}
-        </a>
-    </div>
-    
-    <div class="row">
-        {% for product in products %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text">{{ product.description }}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="rating">
-                            {% for i in 1..5 %}
-                                <span class="fa fa-star {% if i <= product.rating %}checked{% endif %}"></span>
-                            {% endfor %}
-                        </div>
-                        <span class="price font-weight-bold">{{ product.price|number_format(2) }} TND</span>
-                    </div>
-                </div>
-                <div class="card-footer bg-white">
-                    <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-primary btn-block">
-                        Ajouter au panier
-                    </a>
+<div class="container my-5">
+    <div class="text-center mb-5 animate__animated animate__fadeIn">
+        <!-- Titre principal -->
+        <h1 class="display-4 fw-bold text-primary mb-4">
+            <i class="fas fa-heartbeat me-3"></i>Bienvenue sur PharmaCare
+        </h1>
+
+        <!-- Description -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-8">
+                <div class="border-start border-4 border-primary ps-4 py-2 bg-light rounded-end">
+                    <p class="lead text-muted mb-0">
+                        <i class="fas fa-star text-warning me-2"></i>
+                        Nos produits sont sélectionnés avec soin pour garantir la meilleure qualité 
+                        de soins dermatologiques et pharmaceutiques.
+                    </p>
                 </div>
             </div>
         </div>
-        {% endfor %}
+
+        <!-- Boutons d'authentification -->
+        {% if not is_granted('ROLE_USER') %}
+        <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+            <a href="{{ path('app_pages') }}" class="btn btn-lg btn-primary px-5 py-3 shadow-sm">
+                <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+            </a>
+            <span class="d-none d-md-block align-self-center text-muted">ou</span>
+            <a href="{{ path('app_register') }}" class="btn btn-lg btn-success px-5 py-3 shadow-sm">
+                <i class="fas fa-user-plus me-2"></i>Créer un compte
+            </a>
+        </div>
+        {% endif %}
     </div>
 </div>
 
+<!-- Carousel principal (En haut) -->
+<div id="carouselExampleIndicators" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
+    </div>
+    
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://cdn.btyaly.fr/wp-content/uploads/2020/05/Best_of_skincare_French_pharmacie_2020_Avene_La_Roche_Posay_SVR.jpg" class="d-block w-100 carousel-img" alt="Promo 1">
+        </div>
+        <div class="carousel-item">
+            <img src="https://www.vpharma-connect.be/assets/cache/dba4780e-778d-43e7-b991-515efbb4cd1a/2000x833-fr.png" class="d-block w-100 carousel-img" alt="Promo 2">
+        </div>
+        <div class="carousel-item">
+            <img src="https://www.vpharma-connect.be/assets/cache/650ac486-c7d4-4d9c-a49a-80d3a8a6f99b/2000x833-fr.png" class="d-block w-100 carousel-img" alt="Promo 3">
+        </div>
+        <div class="carousel-item">
+            <img src="https://www.alvadiem.fr/cdn/shop/files/Gamme_corps_soins_corps_1536x.jpg?v=1659969235" class="d-block w-100 carousel-img" alt="Promo 4">
+        </div>
+    </div>
+    
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- Section Produits 1 -->
+<div class="container mt-5">
+    <div class="row g-4">
+        <!-- Colonne gauche - Produit du mois -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <img src="https://cdn.cms.tagadamedia.com/testonsensemble/2021-01/lampoule-refresh-des-laboratoires-svr-1.jpg" 
+                     class="card-img-top single-img" 
+                     alt="Produit phare">
+                <div class="card-body text-center">
+                    <h3 class="text-primary fw-bold">Les produits SVR</h3>
+                    <h5 class="card-title">Toutes nos gammes </h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne droite - Carousel produits -->
+        <div class="col-md-8">
+            <div id="productCarousel1" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <!-- Produit 1 -->
+                    <div class="carousel-item active">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://pharma-shop.tn/27414-home_default/svr-clairial-cc-creme-light-spf50-40mlun-produit-offert-au-choix.jpg" 
+                                         class="img-fluid product-img" 
+                                         alt="ULTRASUN FACE">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">ULTRASUN FACE ANTI AGEING</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">87,810 TND</span> 
+                                            <del class="text-muted">97,567 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Produit 2 -->
+                    <div class="carousel-item">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://tn.svr.com/cdn/shop/files/1.1-SunSecure-LaitSPF50_-1029A27-SVR-Protectionsolairehauteperformance.jpg?v=1733158114" 
+                                         class="img-fluid product-img" 
+                                         alt="SVR BRUME">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">SVR SUN SECURE BRUME SPF50+</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">58,998 TND</span> 
+                                            <del class="text-muted">73,748 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Produit 3 -->
+                    <div class="carousel-item">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://www.maparatunisie.tn/wp-content/uploads/2020/12/317664-laboratoires-svr-sebiaclear-gel-moussant-200ml-demaquillant-et-nettoyant-200ml-tube-1000x1000-1.jpg" 
+                                         class="img-fluid product-img" 
+                                         alt="SVR BRUME">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">SVR SUN SECURE BRUME SPF50+</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">58,998 TND</span> 
+                                            <del class="text-muted">73,748 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Produit 4 -->
+                    <div class="carousel-item">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://media.pharmaciedesdrakkars.com/media/images/products/w-532-h-532-zc-2-svr-collagen-biotic-creme-rebondissante-raffermissante-svr4-1727355564.jpg" 
+                                         class="img-fluid product-img" 
+                                         alt="SVR BRUME">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">SVR SUN SECURE BRUME SPF50+</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">58,998 TND</span> 
+                                            <del class="text-muted">73,748 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contrôles du carousel -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel1" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel1" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Produits 2 -->
+<div class="container mt-5">
+    <div class="row g-4">
+        <!-- Colonne gauche - Nouveau produit -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <img src="https://www.pharma-gdd.com/media/cache/resolve/slide_original/7461622d67656c7fe024c2.jpg" 
+                     class="card-img-top single-img" 
+                     alt="Nouveau produit">
+                <div class="card-body text-center">
+                    <h3 class="text-primary fw-bold">Les produits Effaclar</h3>
+                    <h5 class="card-title">Pack Effaclar Soin Anti-Imperfections</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne droite - Carousel produits -->
+        <div class="col-md-8">
+            <div id="productCarousel2" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <!-- Produit 1 -->
+                    <div class="carousel-item active">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://boxpara.com.tn/5278-large_default/pack-effaclar-soin-anti-imperfections-duo-gel-moussant-serum-ultra-concentre-30ml-.jpg" 
+                                         class="img-fluid product-img" 
+                                         alt="Produit 3">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">PRODUIT 3</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">99,999 TND</span> 
+                                            <del class="text-muted">120,000 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Produit 2 -->
+                    <div class="carousel-item">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://edenpharma.tn/6196-large_default/la-roche-posay-effaclar-duo-spf30-40ml.jpg" 
+                                         class="img-fluid product-img" 
+                                         alt="Produit 4">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">PRODUIT 4</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">75,500 TND</span> 
+                                            <del class="text-muted">90,000 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Produit 3 -->
+                    <div class="carousel-item">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://rukminim2.flixcart.com/image/850/1000/xif0q/anti-ageing/s/l/o/30-effaclar-ultra-concentrated-serum-la-roche-posay-original-imagxjvnpzfvhbk2.jpeg?q=90&crop=false" 
+                                         class="img-fluid product-img" 
+                                         alt="Produit 4">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">PRODUIT 4</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">75,500 TND</span> 
+                                            <del class="text-muted">90,000 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Produit 4 -->
+                    <div class="carousel-item">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://bairrodasaude.pt/cdn/shop/files/3337875777797.jpg?v=1727966151" 
+                                         class="img-fluid product-img" 
+                                         alt="Produit 4">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">PRODUIT 4</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">75,500 TND</span> 
+                                            <del class="text-muted">90,000 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contrôles du carousel -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel2" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel2" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Section Produits 3 -->
+<div class="container mt-5">
+    <div class="row g-4">
+        <!-- Colonne gauche - Produit ISDIN -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <img src="https://ucanbe.tn/storage/media/Hdt6bxxV2ji8iDiSxXCo2lgnUj2kc0J8rCItmRtz.webp" 
+                     class="card-img-top single-img" 
+                     alt="Produits ISDIN">
+                <div class="card-body text-center">
+                    <h3 class="text-primary fw-bold">Les produits ISDIN</h3>
+                    <h5 class="card-title">Gamme complète de protection solaire</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne droite - Carousel produits -->
+        <div class="col-md-8">
+            <div id="productCarousel3" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <!-- Produit 1 -->
+                    <div class="carousel-item active">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://www.maparatunisie.tn/wp-content/uploads/2024/04/isdin-acniben-2-controle-brillance-et-boutons-8470003245920.webp" 
+                                         class="img-fluid product-img" 
+                                         alt="ISDIN Acniben">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">ISDIN Acniben Contrôle Brillance</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">85,000 TND</span> 
+                                            <del class="text-muted">99,900 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Produit 2 -->
+                    <div class="carousel-item">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://amal-medical.com/15680-large_default/isdin-creme-age-reverse-50-ml.jpg" 
+                                         class="img-fluid product-img" 
+                                         alt="ISDIN Age Reverse">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">ISDIN Age Reverse Crème Anti-Âge</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">120,500 TND</span> 
+                                            <del class="text-muted">145,000 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Produit 3 -->
+                    <div class="carousel-item">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://www.lamode.tn/24181-large_default/ecran-solaire-isdin-spray-spf-50-250-ml.webp" 
+                                         class="img-fluid product-img" 
+                                         alt="ISDIN Spray Solaire">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">ISDIN Spray Solaire SPF50+ 250ml</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">65,900 TND</span> 
+                                            <del class="text-muted">79,900 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Produit 4 -->
+                    <div class="carousel-item">
+                        <div class="card h-100 shadow">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <img src="https://paramust.tn/4118-home_default/isdin-acniben-cleanser-gel-matifiant-favial-400ml.jpg" 
+                                         class="img-fluid product-img" 
+                                         alt="ISDIN Gel Nettoyant">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">ISDIN Gel Nettoyant Matifiant 400ml</h5>
+                                        <p class="card-text">
+                                            <span class="text-danger fs-4">45,500 TND</span> 
+                                            <del class="text-muted">55,000 TND</del>
+                                        </p>
+                                        <button class="btn btn-success w-100">
+                                            <i class="fas fa-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contrôles du carousel -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel3" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel3" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Style personnalisé -->
 <style>
-    .checked {
-        color: orange;
+    .product-img {
+        max-height: 250px;
+        object-fit: contain;
+        padding: 15px;
     }
+    
+    .single-img {
+        max-height: 300px;
+        object-fit: cover;
+    }
+    
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-size: 60%;
+    }
+    
     .card {
-        transition: transform 0.3s;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border: none;
     }
+    
     .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #0066cc, #004080);
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #198754, #145c38);
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .border-start {
+        border-left-width: 3px !important;
+    }
+
+    .lead {
+        font-size: 1.25rem;
+        line-height: 1.6;
     }
 </style>
 {% endblock %}
