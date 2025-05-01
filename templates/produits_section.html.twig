@@ -1,0 +1,197 @@
+
+{% block body %}
+
+<!-- Section produits générique -->
+{% set sections = [
+    {
+        titre: 'Les produits SVR',
+        description: 'Toutes nos gammes',
+        image: 'https://cdn.cms.tagadamedia.com/testonsensemble/2021-01/lampoule-refresh-des-laboratoires-svr-1.jpg',
+        produits: [
+            {
+                titre: 'ULTRASUN FACE ANTI AGEING',
+                image: 'https://pharma-shop.tn/27414-home_default/svr-clairial-cc-creme-light-spf50-40mlun-produit-offert-au-choix.jpg',
+                prix: '87,810',
+                prix_old: '97,567'
+            },
+            {
+                titre: 'SVR SUN SECURE BRUME SPF50+',
+                image: 'https://tn.svr.com/cdn/shop/files/1.1-SunSecure-LaitSPF50_-1029A27-SVR-Protectionsolairehauteperformance.jpg?v=1733158114',
+                prix: '58,998',
+                prix_old: '73,748'
+            },
+	   {
+                titre: 'SVR SUN SECURE BRUME SPF50+',
+                image: 'https://www.maparatunisie.tn/wp-content/uploads/2020/12/317664-laboratoires-svr-sebiaclear-gel-moussant-200ml-demaquillant-et-nettoyant-200ml-tube-1000x1000-1.jpg',
+                prix: '58,998',
+                prix_old: '73,748'
+            },
+	    {
+                titre: 'SVR SUN SECURE BRUME SPF50+',
+                image: 'https://media.pharmaciedesdrakkars.com/media/images/products/w-532-h-532-zc-2-svr-collagen-biotic-creme-rebondissante-raffermissante-svr4-1727355564.jpg',
+                prix: '58,998',
+                prix_old: '73,748'
+            }
+	  
+        ]
+    },
+    {
+        titre: 'Les produits Effaclar',
+        description: 'Pack Effaclar Soin Anti-Imperfections',
+        image: 'https://www.pharma-gdd.com/media/cache/resolve/slide_original/7461622d67656c7fe024c2.jpg',
+        produits: [
+            {
+                titre: 'PRODUIT 3',
+                image: 'https://boxpara.com.tn/5278-large_default/pack-effaclar-soin-anti-imperfections-duo-gel-moussant-serum-ultra-concentre-30ml-.jpg',
+                prix: '99,999',
+                prix_old: '120,000'
+            },
+            {
+                titre: 'PRODUIT 4',
+                image: 'https://edenpharma.tn/6196-large_default/la-roche-posay-effaclar-duo-spf30-40ml.jpg',
+                prix: '75,500',
+                prix_old: '90,000'
+            },
+ 	    {
+                titre: 'PRODUIT 4',
+                image: 'https://rukminim2.flixcart.com/image/850/1000/xif0q/anti-ageing/s/l/o/30-effaclar-ultra-concentrated-serum-la-roche-posay-original-imagxjvnpzfvhbk2.jpeg?q=90&crop=false',
+                prix: '75,500',
+                prix_old: '90,000'
+            },
+ 	   {
+                titre: 'PRODUIT 4',
+                image: 'https://bairrodasaude.pt/cdn/shop/files/3337875777797.jpg?v=1727966151',
+                prix: '75,500',
+                prix_old: '90,000'
+            }
+
+	   
+        ]
+    },
+    {
+        titre: 'Les produits ISDIN',
+        description: 'Gamme complète de protection solaire',
+        image: 'https://ucanbe.tn/storage/media/Hdt6bxxV2ji8iDiSxXCo2lgnUj2kc0J8rCItmRtz.webp',
+        produits: [
+            {
+                titre: 'PRODUIT 3',
+                image: 'https://www.maparatunisie.tn/wp-content/uploads/2024/04/isdin-acniben-2-controle-brillance-et-boutons-8470003245920.webp',
+                prix: '99,999',
+                prix_old: '120,000'
+            },
+            {
+                titre: 'PRODUIT 4',
+                image: 'https://edenpharma.tn/6196-large_default/la-roche-posay-effaclar-duo-spf30-40ml.jpg',
+                prix: '75,500',
+                prix_old: '90,000'
+            },
+	   {
+                titre: 'PRODUIT 4',
+                image: 'https://www.lamode.tn/24181-large_default/ecran-solaire-isdin-spray-spf-50-250-ml.webp',
+                prix: '75,500',
+                prix_old: '90,000'
+            },
+	   {
+                titre: 'PRODUIT 4',
+                image: 'https://paramust.tn/4118-home_default/isdin-acniben-cleanser-gel-matifiant-favial-400ml.jpg',
+                prix: '75,500',
+                prix_old: '90,000'
+            }
+
+
+        ]
+    }
+] %}
+
+{% for section in sections %}
+<div class="container mt-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <img src="{{ section.image }}" class="card-img-top single-img" alt="Produit principal">
+                <div class="card-body text-center">
+                    <h3 class="text-primary fw-bold">{{ section.titre }}</h3>
+                    <h5 class="card-title">{{ section.description }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div id="carousel-{{ loop.index }}" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for produit in section.produits %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <div class="card h-100 shadow">
+                                <div class="row g-0">
+                                    <div class="col-md-6">
+                                        <img src="{{ produit.image }}" class="img-fluid product-img" alt="{{ produit.titre }}">
+                                    </div>
+                                    <div class="col-md-6 d-flex align-items-center">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ produit.titre }}</h5>
+                                            <p class="card-text">
+                                                <span class="text-danger fs-4">{{ produit.prix }} TND</span>
+                                                <del class="text-muted">{{ produit.prix_old }} TND</del>
+                                            </p>
+                                            <button class="btn btn-success w-100 add-to-cart"
+                                                    data-id="{{ loop.index }}"
+                                                    data-name="{{ produit.titre }}"
+                                                    data-price="{{ produit.prix }}">
+                                                <i class="fas fa-cart-plus"></i> Ajouter
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ loop.index }}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ loop.index }}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', () => {
+        const productId = button.dataset.id;
+        const productName = button.dataset.name;
+        const price = button.dataset.price;
+
+        fetch('/cart/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId, productName, price })
+        })
+        .then(res => res.json())
+        .then(data => alert(data.message || 'Produit ajouté au panier.'));
+    });
+});
+</script>
+
+<style>
+    .product-img {
+        max-height: 250px;
+        object-fit: contain;
+        padding: 15px;
+    }
+    .single-img {
+        max-height: 300px;
+        object-fit: cover;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}

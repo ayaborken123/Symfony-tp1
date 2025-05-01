@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation d'Achat{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-primary fw-bold text-center">Confirmer votre Achat</h2>
+    
+    {% if totalItems == 0 %}
+        <p class="text-center text-muted">Votre panier est vide.</p>
+        <a href="{{ path('cart_view_page') }}" class="btn btn-primary w-100 mt-3">Retour au Panier</a>
+    {% else %}
+        <div class="card shadow p-4">
+            <h5 class="text-secondary">Nombre de produits : {{ totalItems }}</h5>
+            <form method="POST" action="{{ path('cart_checkout') }}">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Adresse Email</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Confirmer l'Achat</button>
+            </form>
+            <a href="{{ path('cart_clear') }}" class="btn btn-danger w-100 mt-3">Vider le panier</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

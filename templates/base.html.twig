@@ -114,6 +114,12 @@
                     {% else %}
                         <li class="nav-item"><a class="nav-link btn btn-outline-light" href="{{ path('app_pages') }}">Connexion</a></li>
                         <li class="nav-item"><a class="nav-link btn btn-outline-light" href="{{ path('app_register') }}">Inscription</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-light" href="{{ path('cart_view_page') }}">
+                                <i class="fas fa-shopping-cart"></i> Panier
+                            </a>
+                        </li>
+                        
                     {% endif %}
                 </ul>
             </div>
