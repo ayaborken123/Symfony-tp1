@@ -21,7 +21,11 @@ class PagesController extends AbstractController
     #[Route('/', name: 'app_pages')]
     public function login(): Response
     {
-        return $this->render('pages/Connexion.html.twig');
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('admin_dashboard');
+        } else {
+            return $this->redirectToRoute('app_home');
+        }
     }
 
     #[Route('/register', name: 'app_register')]

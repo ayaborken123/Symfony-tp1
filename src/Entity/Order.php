@@ -22,6 +22,9 @@ class Order
     #[ORM\Column(type: 'json')]
     private array $products = [];
 
+    #[ORM\Column(type: 'json')]
+    private array $quantities = []; // Nouveau attribut
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -36,4 +39,7 @@ class Order
 
     public function getProducts(): array { return $this->products; }
     public function setProducts(array $products): self { $this->products = $products; return $this; }
+
+    public function getQuantities(): array { return $this->quantities; }
+    public function setQuantities(array $quantities): self { $this->quantities = $quantities; return $this; }
 }

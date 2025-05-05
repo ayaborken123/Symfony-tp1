@@ -109,19 +109,31 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if app.user %}
-                        <li class="nav-item"><a class="nav-link">Bonjour, {{ app.user.email }}</a></li>
-                        <li class="nav-item"><a class="nav-link btn btn-outline-light" href="{{ path('app_logout') }}">Déconnexion</a></li>
-                    {% else %}
-                        <li class="nav-item"><a class="nav-link btn btn-outline-light" href="{{ path('app_pages') }}">Connexion</a></li>
-                        <li class="nav-item"><a class="nav-link btn btn-outline-light" href="{{ path('app_register') }}">Inscription</a></li>
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-outline-light" href="{{ path('cart_view_page') }}">
-                                <i class="fas fa-shopping-cart"></i> Panier
-                            </a>
-                        </li>
-                        
-                    {% endif %}
+    <li class="nav-item"><a class="nav-link">Bonjour, {{ app.user.email }}</a></li>
+    <li class="nav-item"><a class="nav-link btn btn-outline-light" href="{{ path('app_logout') }}">Déconnexion</a></li>
+{% else %}
+    <li class="nav-item"><a class="nav-link btn btn-outline-light" href="{{ path('app_pages') }}">Connexion</a></li>
+    <li class="nav-item"><a class="nav-link btn btn-outline-light" href="{{ path('app_register') }}">Inscription</a></li>
+{% endif %}
+
+<!-- Vérification ROLE_ADMIN -->
+{% if app.user is not null and 'ROLE_ADMIN' in app.user.roles %}
+    <li class="nav-item">
+        <a class="nav-link btn btn-warning" href="{{ path('admin_dashboard') }}">
+            <i class="fas fa-user-shield"></i> Interface Admin
+        </a>
+    </li>
+{% endif %}
+
+<!-- Affichage du panier -->
+<li class="nav-item">
+    <a class="nav-link btn btn-outline-light" href="{{ path('cart_view_page') }}">
+        <i class="fas fa-shopping-cart"></i> Panier
+    </a>
+</li>
+
                 </ul>
+                    
             </div>
         </div>
     </nav>

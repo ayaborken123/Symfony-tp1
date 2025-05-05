@@ -39,14 +39,21 @@
 <script>
 document.querySelectorAll('.delete-item').forEach(button => {
     button.addEventListener('click', () => {
-        fetch(`/cart/delete/${button.getAttribute('data-id')}`, { method: 'DELETE' })
-        .then(() => location.reload());
+        const productId = button.getAttribute('data-id');
+        
+        fetch(`/cart/delete/${productId}`, { method: 'DELETE' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                button.closest('.col-md-4').remove(); // Supprime le produit de l'affichage
+            } else {
+                alert(data.error); // Affiche une erreur si le produit n'existe pas
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
     });
 });
-
-document.getElementById('clear-cart').addEventListener('click', () => {
-    fetch('/cart/clear', { method: 'DELETE' })
-    .then(() => location.reload());
-});
 </script>
+
+
 {% endblock %}

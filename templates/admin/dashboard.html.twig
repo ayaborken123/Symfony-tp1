@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-primary fw-bold text-center">Tableau de bord Admin</h2>
+
+    <h3 class="mt-4">Liste des Utilisateurs</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td> {# 🔹 Vérification de l'ID affiché #}
+                <td>{{ user.email }}</td>
+                <td>
+                    <a href="{{ path('admin_delete_user', {'id': user.id}) }}" class="btn btn-danger">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+            
+    </table>
+
+    <h3 class="mt-4">Liste des Commandes</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email Client</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.customerEmail }}</td>
+                    <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>
+                        <a href="{{ path('admin_delete_order', {'id': order.id}) }}" class="btn btn-danger">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

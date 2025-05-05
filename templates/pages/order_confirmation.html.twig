@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation de Commande{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-primary fw-bold text-center">Confirmation de votre Commande</h2>
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success text-center">
+        {{ message }}
+    </div>
+{% endfor %}
+
+
+    <p class="text-center text-muted">Votre commande a été enregistrée avec succès.</p>
+    <a href="{{ path('app_home') }}" class="btn btn-primary w-100 mt-3">Retour à l'accueil</a>
+</div>
+{% endblock %}

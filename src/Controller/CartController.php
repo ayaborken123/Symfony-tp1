@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class CartController extends AbstractController
 {
@@ -41,18 +42,24 @@ class CartController extends AbstractController
         return $this->json(['message' => 'Produit ajouté au panier']);
     }
 
-    #[Route('/cart/delete/{index}', name: 'cart_delete', methods: ['DELETE'])]
-    public function removeFromCart(int $index, SessionInterface $session): JsonResponse
-    {
-        $cart = $session->get('cart', []);
-        if (isset($cart[$index])) {
-            unset($cart[$index]);
-            $session->set('cart', array_values($cart));
+    #[Route('/cart/delete/{productId}', name: 'cart_delete', methods: ['DELETE'])]
+public function removeFromCart(int $productId, SessionInterface $session): JsonResponse
+{
+    $cart = $session->get('cart', []);
+
+    foreach ($cart as $key => $item) {
+        if ($item['productId'] == $productId) {
+            unset($cart[$key]);
+            $cart = array_values($cart); // Réindexe les clés du tableau
+            $session->set('cart', $cart);
             return $this->json(['message' => 'Produit supprimé du panier']);
         }
-
-        return $this->json(['error' => 'Produit introuvable'], 404);
     }
+
+    return $this->json(['error' => 'Produit introuvable'], 404);
+}
+
+    
 
     #[Route('/cart/clear', name: 'cart_clear', methods: ['DELETE'])]
     public function clearCart(SessionInterface $session): JsonResponse
@@ -69,7 +76,6 @@ public function confirmPurchase(SessionInterface $session): Response
         'totalItems' => count($cart)
     ]);
 }
-
 #[Route('/cart/checkout', name: 'cart_checkout', methods: ['POST'])]
 public function checkout(Request $request, SessionInterface $session, EntityManagerInterface $entityManager): Response
 {
@@ -83,15 +89,35 @@ public function checkout(Request $request, SessionInterface $session, EntityMana
         return new Response('Email requis pour valider la commande', Response::HTTP_BAD_REQUEST);
     }
 
+    // Récupérer les quantités envoyées depuis le formulaire
+    $quantities = $request->request->all()['quantities'];
+
+    // Vérifier que toutes les quantités sont bien renseignées
+    foreach ($cart as $key => &$item) {
+        $item['quantity'] = $quantities[$key] ?? 1; // Valeur par défaut = 1
+    }
+
+    // Enregistrer la commande en base
     $order = new Order();
     $order->setCustomerEmail($email);
     $order->setProducts($cart);
+    $order->setQuantities(array_column($cart, 'quantity')); // Sauvegarde des quantités
 
     $entityManager->persist($order);
     $entityManager->flush();
 
     $session->set('cart', []);
 
-    return $this->redirectToRoute('app_home', ['message' => 'Commande confirmée et enregistrée']);
+    // ✅ Ajout du message flash via `$session->getFlashBag()`
+    $session->getFlashBag()->add('success', 'Votre commande a été passée avec succès ! Merci pour votre confiance.');
+
+    return $this->redirectToRoute('order_confirmation_page');
 }
+#[Route('/order/confirmation', name: 'order_confirmation_page')]
+public function confirmation(): Response
+{
+    return $this->render('pages/order_confirmation.html.twig');
+}
+
+
 }
