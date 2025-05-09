@@ -10,8 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+
 class PagesController extends AbstractController
 {
+    
+
     #[Route('/home', name: 'app_home')]
     public function index(SessionInterface $session): Response
     {
@@ -58,4 +61,7 @@ class PagesController extends AbstractController
 
         return $this->redirectToRoute('app_home', ['message' => 'Commande enregistrée']);
     }
+
+   
+
 }

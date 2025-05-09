@@ -15,9 +15,10 @@
                         <div class="card-body text-center">
                             <h5 class="card-title">{{ item.productName }}</h5>
                             <p class="card-text">{{ item.price }} TND</p>
-                            <button class="btn btn-danger delete-item" data-id="{{ loop.index }}">
-                                <i class="fas fa-times"></i> Supprimer
-                            </button>
+                            <button class="btn btn-danger delete-item" data-id="{{ item.productId }}">
+    <i class="fas fa-times"></i> Supprimer
+</button>
+
                         </div>
                     </div>
                 </div>
@@ -40,19 +41,34 @@
 document.querySelectorAll('.delete-item').forEach(button => {
     button.addEventListener('click', () => {
         const productId = button.getAttribute('data-id');
-        
+
         fetch(`/cart/delete/${productId}`, { method: 'DELETE' })
         .then(response => response.json())
         .then(data => {
             if (data.message) {
-                button.closest('.col-md-4').remove(); // Supprime le produit de l'affichage
+                console.log("✅ Produit supprimé !");
+                button.closest('.col-md-4').remove(); // Supprime l'affichage
             } else {
-                alert(data.error); // Affiche une erreur si le produit n'existe pas
+                alert(data.error);
             }
         })
         .catch(error => console.error('Erreur:', error));
     });
 });
+document.getElementById('clear-cart').addEventListener('click', () => {
+    fetch(`/cart/clear`, { method: 'DELETE' })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            console.log("✅ Panier vidé !");
+            document.querySelector('.row').innerHTML = '<p class="text-center text-muted">Votre panier est vide.</p>';
+        } else {
+            alert("⚠️ Erreur lors du vidage du panier !");
+        }
+    })
+    .catch(error => console.error('Erreur:', error));
+});
+
 </script>
 
 

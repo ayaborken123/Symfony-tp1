@@ -17,11 +17,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-    public function getId(): ?int
-{
-    return $this->id;
-}
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
@@ -35,6 +35,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column(type: 'boolean', nullable: false)]
+    private bool $isVerified = false; // ✅ Ajouté pour corriger l'erreur
+
     public function getPassword(): string
     {
         return $this->password;
@@ -43,7 +46,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -55,7 +57,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -84,14 +85,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
-
         return $this;
     }
 
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-
 
     /**
      * @see UserInterface
@@ -110,7 +109,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
-
         return $this;
     }
 }
