@@ -83,33 +83,33 @@
         <p id="aiResponse" class="text-muted"></p>
     </div>
 </div>
+
 <script>
-let lastRequestTime = localStorage.getItem('lastRequestTime') || 0;
-document.addEventListener("DOMContentLoaded", function () {
-    let activeIndicator = document.querySelector('.carousel-indicators .active');
-    if (activeIndicator) {
-        activeIndicator.classList.remove('active');
-    }
-});
-
-
 document.getElementById('sendMessage').addEventListener('click', async function() {
-    let userMessage = document.getElementById('userMessage').value;
-    
+    const userMessage = document.getElementById('userMessage').value.trim();
+    const aiResponse = document.getElementById('aiResponse');
+
+    if (!userMessage) {
+        aiResponse.innerText = "❗Veuillez écrire un message.";
+        return;
+    }
+
+    aiResponse.innerText = "⏳ Chargement...";
+
     try {
-        let response = await fetch('/ai-assistant?message=' + encodeURIComponent(userMessage));
-        let data = await response.json();
-        
-        document.getElementById('aiResponse').innerText = data.error || data;
+        const response = await fetch('/chatbot?message=' + encodeURIComponent(userMessage));
+        const data = await response.json();
+
+        console.log("Réponse API :", data); // ✅ Debugging
+
+        // ✅ Corrigé
+        aiResponse.innerText = data.response?.content || (data.error ? data.error : "⚠️ Erreur lors de la récupération.");
     } catch (error) {
         console.error("Erreur API:", error);
-        document.getElementById('aiResponse').innerText = "⚠️ Erreur lors de la récupération de la réponse.";
+        aiResponse.innerText = "⚠️ Erreur lors de la récupération.";
     }
 });
 
+
 </script>
-
-
-
-
 {% endblock %}

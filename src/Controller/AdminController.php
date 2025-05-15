@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+
 
 #[Route('/admin')]
 class AdminController extends AbstractController
@@ -70,4 +72,22 @@ class AdminController extends AbstractController
 
         return new Response('Utilisateur trouvé : ' . $user->getEmail() . ' avec rôle : ' . json_encode($user->getRoles()));
     }
+    #[Route('/update/role/{id}', name: 'admin_update_role', methods: ['POST'])]
+public function updateRole($id, EntityManagerInterface $entityManager, Request $request): Response
+{
+    $idInt = (int) $id;
+    $user = $entityManager->getRepository(User::class)->find($idInt);
+
+    if (!$user) {
+        return new Response('⚠️ Erreur : Aucun utilisateur trouvé avec ID ' . $idInt);
+    }
+
+    $role = $request->request->get('role'); // Récupère le rôle depuis le formulaire
+    $user->setRoles([$role]); // Applique le nouveau rôle
+    $entityManager->flush(); // Sauvegarde en base
+
+    return $this->redirectToRoute('admin_dashboard'); // Redirection vers la liste des utilisateurs
+}
+
+
 }

@@ -7,26 +7,37 @@
     <h2 class="text-primary fw-bold text-center">Tableau de bord Admin</h2>
 
     <h3 class="mt-4">Liste des Utilisateurs</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td> {# 🔹 Vérification de l'ID affiché #}
-                <td>{{ user.email }}</td>
-                <td>
-                    <a href="{{ path('admin_delete_user', {'id': user.id}) }}" class="btn btn-danger">Supprimer</a>
-                </td>
-            </tr>
-            {% endfor %}
-            
-    </table>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+                <form action="{{ path('admin_update_role', {'id': user.id}) }}" method="post">
+                    <select name="role">
+                        <option value="ROLE_USER" {% if 'ROLE_USER' in user.roles %}selected{% endif %}>User</option>
+                        <option value="ROLE_ADMIN" {% if 'ROLE_ADMIN' in user.roles %}selected{% endif %}>Admin</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Modifier le rôle</button>
+                </form>
+            </td>
+            <td>
+                <a href="{{ path('admin_delete_user', {'id': user.id}) }}" class="btn btn-danger">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 
     <h3 class="mt-4">Liste des Commandes</h3>
     <table class="table">
@@ -34,6 +45,8 @@
             <tr>
                 <th>ID</th>
                 <th>Email Client</th>
+                <th>produit</th>
+
                 <th>Date</th>
                 <th>Actions</th>
             </tr>
@@ -43,6 +56,11 @@
                 <tr>
                     <td>{{ order.id }}</td>
                     <td>{{ order.customerEmail }}</td>
+                    <td>{% for product in order.products %}
+        {{ product.productName }} - {{ product.price }} TND<br>
+    {% endfor %}</td>
+
+
                     <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
                     <td>
                         <a href="{{ path('admin_delete_order', {'id': order.id}) }}" class="btn btn-danger">Supprimer</a>
