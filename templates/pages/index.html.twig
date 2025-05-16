@@ -72,44 +72,74 @@
 
 {% include 'produits_section.html.twig' %}
 
-<div class="container mt-5">
-    <h2 class="text-primary fw-bold text-center">Assistance IA</h2>
+<div class="container mt-5" style="max-width: 700px;">
+  <div class="text-center mb-4">
+    <h2 class="text-primary fw-bold">💬 Assistance IA Interactive</h2>
+    <p class="text-secondary">Posez une question et recevez une réponse instantanée !</p>
+  </div>
 
+  <div class="input-group">
     <input type="text" id="userMessage" class="form-control" placeholder="Posez votre question...">
-    <button id="sendMessage" class="btn btn-success mt-3">Envoyer</button>
+    <button id="sendMessage" class="btn btn-success">Envoyer</button>
+  </div>
 
-    <div class="mt-4">
-        <h4>Réponse IA :</h4>
-        <p id="aiResponse" class="text-muted"></p>
-    </div>
+  <div class="mt-4 p-3 rounded shadow-sm bg-light" style="min-height: 120px;">
+    <h5 class="text-dark">🤖 Réponse IA :</h5>
+    <p id="aiResponse" class="text-muted" style="white-space: pre-line;"></p>
+  </div>
 </div>
 
 <script>
-document.getElementById('sendMessage').addEventListener('click', async function() {
-    const userMessage = document.getElementById('userMessage').value.trim();
-    const aiResponse = document.getElementById('aiResponse');
+  const userMessageInput = document.getElementById('userMessage');
+  const aiResponse = document.getElementById('aiResponse');
+  const sendButton = document.getElementById('sendMessage');
 
-    if (!userMessage) {
-        aiResponse.innerText = "❗Veuillez écrire un message.";
-        return;
+  // Animation de type "machine à écrire"
+  function typeText(element, text, speed = 30) {
+    element.innerText = '';
+    let index = 0;
+    const typing = setInterval(() => {
+      if (index < text.length) {
+        element.innerText += text.charAt(index);
+        index++;
+      } else {
+        clearInterval(typing);
+      }
+    }, speed);
+  }
+
+  async function sendMessage() {
+    const message = userMessageInput.value.trim();
+    if (!message) {
+      aiResponse.innerHTML = "<span class='text-danger'>❗Veuillez écrire un message.</span>";
+      return;
     }
 
-    aiResponse.innerText = "⏳ Chargement...";
+    aiResponse.innerHTML = "<span class='text-info'>⏳ Réflexion en cours...</span>";
 
     try {
-        const response = await fetch('/chatbot?message=' + encodeURIComponent(userMessage));
-        const data = await response.json();
+      const response = await fetch('/chatbot?message=' + encodeURIComponent(message));
+      const data = await response.json();
 
-        console.log("Réponse API :", data); // ✅ Debugging
+      const content = data.response?.content || data.error || "⚠️ Réponse inattendue.";
+      typeText(aiResponse, content); // ✅ animation de la réponse
 
-        // ✅ Corrigé
-        aiResponse.innerText = data.response?.content || (data.error ? data.error : "⚠️ Erreur lors de la récupération.");
     } catch (error) {
-        console.error("Erreur API:", error);
-        aiResponse.innerText = "⚠️ Erreur lors de la récupération.";
+      console.error("Erreur API:", error);
+      aiResponse.innerHTML = "<span class='text-danger'>⚠️ Erreur de connexion au serveur.</span>";
     }
-});
+  }
 
+  // Clique sur le bouton
+  sendButton.addEventListener('click', sendMessage);
 
+  // Appuie sur "Entrée"
+  userMessageInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
 </script>
+
+
 {% endblock %}
