@@ -72,74 +72,52 @@
 
 {% include 'produits_section.html.twig' %}
 
-<div class="container mt-5" style="max-width: 700px;">
-  <div class="text-center mb-4">
-    <h2 class="text-primary fw-bold">💬 Assistance IA Interactive</h2>
-    <p class="text-secondary">Posez une question et recevez une réponse instantanée !</p>
-  </div>
+<div class="container mt-5">
+    <h2 class="text-primary fw-bold text-center">💬 Assistance IA – Posez votre question !</h2>
 
-  <div class="input-group">
-    <input type="text" id="userMessage" class="form-control" placeholder="Posez votre question...">
-    <button id="sendMessage" class="btn btn-success">Envoyer</button>
-  </div>
+    <div class="input-group mt-4">
+        <input type="text" id="userMessage" class="form-control" placeholder="Posez votre question..." autocomplete="off">
+        <button id="sendMessage" class="btn btn-success">Envoyer 🚀</button>
+    </div>
 
-  <div class="mt-4 p-3 rounded shadow-sm bg-light" style="min-height: 120px;">
-    <h5 class="text-dark">🤖 Réponse IA :</h5>
-    <p id="aiResponse" class="text-muted" style="white-space: pre-line;"></p>
-  </div>
+    <div class="mt-4 p-3 bg-light rounded shadow">
+        <h4 class="fw-bold text-success">✨ Réponse IA :</h4>
+        <p id="aiResponse" class="text-muted">⚡ Posez une question et obtenez une réponse instantanée.</p>
+    </div>
 </div>
 
+<style>
+    #sendMessage { transition: background 0.3s ease-in-out; }
+    #sendMessage:hover { background: #28a745; transform: scale(1.05); }
+    #aiResponse { font-style: italic; }
+</style>
+
 <script>
-  const userMessageInput = document.getElementById('userMessage');
-  const aiResponse = document.getElementById('aiResponse');
-  const sendButton = document.getElementById('sendMessage');
+document.getElementById('sendMessage').addEventListener('click', async function() {
+    const userMessage = document.getElementById('userMessage').value.trim();
+    const aiResponse = document.getElementById('aiResponse');
 
-  // Animation de type "machine à écrire"
-  function typeText(element, text, speed = 30) {
-    element.innerText = '';
-    let index = 0;
-    const typing = setInterval(() => {
-      if (index < text.length) {
-        element.innerText += text.charAt(index);
-        index++;
-      } else {
-        clearInterval(typing);
-      }
-    }, speed);
-  }
-
-  async function sendMessage() {
-    const message = userMessageInput.value.trim();
-    if (!message) {
-      aiResponse.innerHTML = "<span class='text-danger'>❗Veuillez écrire un message.</span>";
-      return;
+    if (!userMessage) {
+        aiResponse.innerText = "❗ Veuillez écrire une question avant d'envoyer.";
+        return;
     }
 
-    aiResponse.innerHTML = "<span class='text-info'>⏳ Réflexion en cours...</span>";
+    aiResponse.innerHTML = "⏳ <i>Analyse en cours...</i>";
 
     try {
-      const response = await fetch('/chatbot?message=' + encodeURIComponent(message));
-      const data = await response.json();
+        const response = await fetch('/chatbot?message=' + encodeURIComponent(userMessage));
+        const data = await response.json();
 
-      const content = data.response?.content || data.error || "⚠️ Réponse inattendue.";
-      typeText(aiResponse, content); // ✅ animation de la réponse
+        console.log("Réponse API :", data); // ✅ Debugging
 
+        aiResponse.innerHTML = data.response?.content || 
+                               (data.error ? `<span style="color:red;">❌ ${data.error}</span>` : 
+                               "⚠️ Erreur lors de la récupération.");
     } catch (error) {
-      console.error("Erreur API:", error);
-      aiResponse.innerHTML = "<span class='text-danger'>⚠️ Erreur de connexion au serveur.</span>";
+        console.error("Erreur API:", error);
+        aiResponse.innerHTML = "<span style='color:red;'>⚠️ Problème de connexion. Veuillez réessayer.</span>";
     }
-  }
-
-  // Clique sur le bouton
-  sendButton.addEventListener('click', sendMessage);
-
-  // Appuie sur "Entrée"
-  userMessageInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      sendMessage();
-    }
-  });
+});
 </script>
-
 
 {% endblock %}
