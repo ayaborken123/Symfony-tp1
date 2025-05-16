@@ -6,38 +6,43 @@
 <div class="container mt-5">
     <h2 class="text-primary fw-bold text-center">Tableau de bord Admin</h2>
 
-    <h3 class="mt-4">Liste des Utilisateurs</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <td>{{ user.id }}</td>
-            <td>{{ user.email }}</td>
-            <td>
-                <form action="{{ path('admin_update_role', {'id': user.id}) }}" method="post">
-                    <select name="role">
-                        <option value="ROLE_USER" {% if 'ROLE_USER' in user.roles %}selected{% endif %}>User</option>
-                        <option value="ROLE_ADMIN" {% if 'ROLE_ADMIN' in user.roles %}selected{% endif %}>Admin</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary">Modifier le rôle</button>
-                </form>
-            </td>
-            <td>
-                <a href="{{ path('admin_delete_user', {'id': user.id}) }}" class="btn btn-danger">Supprimer</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <!-- 🛠️ Ajout du champ de recherche -->
+    <div class="input-group mb-4">
+        <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un utilisateur ou un produit..." autocomplete="off">
+        <button class="btn btn-primary" id="searchBtn">🔎 Rechercher</button>
+    </div>
 
+    <h3 class="mt-4">Liste des Utilisateurs</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Rôle</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="userTable">
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td class="searchable">{{ user.email }}</td>
+                <td>
+                    <form action="{{ path('admin_update_role', {'id': user.id}) }}" method="post">
+                        <select name="role">
+                            <option value="ROLE_USER" {% if 'ROLE_USER' in user.roles %}selected{% endif %}>User</option>
+                            <option value="ROLE_ADMIN" {% if 'ROLE_ADMIN' in user.roles %}selected{% endif %}>Admin</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Modifier le rôle</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="{{ path('admin_delete_user', {'id': user.id}) }}" class="btn btn-danger">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <h3 class="mt-4">Liste des Commandes</h3>
     <table class="table">
@@ -45,29 +50,48 @@
             <tr>
                 <th>ID</th>
                 <th>Email Client</th>
-                <th>produit</th>
-
+                <th>Produit</th>
                 <th>Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="productTable">
             {% for order in orders %}
-                <tr>
-                    <td>{{ order.id }}</td>
-                    <td>{{ order.customerEmail }}</td>
-                    <td>{% for product in order.products %}
-        {{ product.productName }} - {{ product.price }} TND<br>
-    {% endfor %}</td>
-
-
-                    <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
-                    <td>
-                        <a href="{{ path('admin_delete_order', {'id': order.id}) }}" class="btn btn-danger">Supprimer</a>
-                    </td>
-                </tr>
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.customerEmail }}</td>
+                <td class="searchable">
+                    {% for product in order.products %}
+                        {{ product.productName }} - {{ product.price }} TND<br>
+                    {% endfor %}
+                </td>
+                <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                <td>
+                    <a href="{{ path('admin_delete_order', {'id': order.id}) }}" class="btn btn-danger">Supprimer</a>
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+<!-- 🚀 Script pour le filtre en direct -->
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function () {
+    const searchValue = this.value.toLowerCase();
+    const userRows = document.querySelectorAll("#userTable tr");
+    const productRows = document.querySelectorAll("#productTable tr");
+
+    userRows.forEach(row => {
+        const emailCell = row.querySelector(".searchable");
+        row.style.display = emailCell.innerText.toLowerCase().includes(searchValue) ? "" : "none";
+    });
+
+    productRows.forEach(row => {
+        const productCell = row.querySelector(".searchable");
+        row.style.display = productCell.innerText.toLowerCase().includes(searchValue) ? "" : "none";
+    });
+});
+</script>
+
 {% endblock %}
